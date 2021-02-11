@@ -2,7 +2,10 @@ const compute = document.getElementById("compute");
 const display = document.getElementById("display");
 const numbers = document.querySelectorAll(".num-btn");
 const operations = document.querySelectorAll(".operation");
+const percentage = document.getElementById("percentage");
+const invert = document.getElementById("invert");
 const clear = document.getElementById("clear-btn");
+const period = document.getElementById("period-btn");
 let initialNum;
 let currentOperation;
 let nullOperation = true;
@@ -11,46 +14,38 @@ function add(num1, num2) {
 	let ans = num1 + num2;
 	initialNum = ans;
 	display.innerText = String(ans);
-	console.log(num1 + num2);
 }
 
 function subtract(num1, num2) {
 	let ans = num1 - num2;
 	initialNum = ans;
 	display.innerText = String(ans);
-	console.log(num1 - num2);
 }
 
 function multiply(num1, num2) {
 	let ans = num1 * num2;
 	initialNum = ans;
 	display.innerText = String(ans);
-	console.log(num1 * num2);
 }
 
 function divide(num1, num2) {
 	let ans = num1 / num2;
-	initialNum = ans;
-	display.innerText = String(ans);
-	console.log(num1 / num2);
+	initialNum = ans.toFixed(2);
+	display.innerText = String(ans.toFixed(2));
 }
-
-function percentage(num1, num2) {}
 
 function operate(operation, num1, num2) {
 	num2 = Number(num2);
 	num1 = Number(num1);
 
-	if (operation == "+") {
+	if (operation === "+") {
 		add(num1, num2);
-	} else if (operation == "-") {
+	} else if (operation === "-") {
 		subtract(num1, num2);
-	} else if (operation == "*") {
+	} else if (operation === "*") {
 		multiply(num1, num2);
-	} else if (operation == "/") {
+	} else if (operation === "/") {
 		divide(num1, num2);
-	} else if (operation == "%") {
-		add(num1, num2);
 	}
 }
 
@@ -70,7 +65,10 @@ compute.addEventListener("click", () => {
 // Display the clicked numbers
 numbers.forEach((num) =>
 	num.addEventListener("click", () => {
-		display.innerText += num.innerText;
+		let len = display.innerText.length;
+		if (len <= 6) {
+			display.innerText += num.innerText;
+		}
 	})
 );
 
@@ -78,7 +76,9 @@ numbers.forEach((num) =>
 operations.forEach((operation) =>
 	operation.addEventListener("click", () => {
 		if (nullOperation == false) {
+			console.log(initialNum);
 			operate(currentOperation, initialNum, display.innerText);
+			nullOperation = true;
 		}
 		currentOperation = operation.innerText;
 		initialNum = display.innerText;
@@ -86,3 +86,28 @@ operations.forEach((operation) =>
 		nullOperation = false;
 	})
 );
+
+// percentage operation
+percentage.addEventListener("click", () => {
+	let ans = Number(display.innerText) / 100;
+	display.innerText = ans;
+	console.log(ans.toFixed(2));
+});
+
+invert.addEventListener("click", () => {
+	let ans = Number(display.innerText);
+	if (ans > 0) {
+		ans = -Math.abs(ans);
+	} else if (ans < 0) {
+		ans = Math.abs(ans);
+	}
+	display.innerText = ans;
+});
+
+period.addEventListener("click", () => {
+	if (display.innerText == "") {
+		display.innerText = "0.";
+	} else {
+		display.innerText += ".";
+	}
+});
